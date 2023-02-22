@@ -20,7 +20,7 @@
 
 import java.util.Random;
 
-public class KelvinTempSensor {
+public class KelvinTempSensor{
     /*
      * Min and max readings this sensor will actually report:
      *    23315 =  -40 C
@@ -78,4 +78,6 @@ public class KelvinTempSensor {
 
         return currentReading ;
     }
+
+
 }

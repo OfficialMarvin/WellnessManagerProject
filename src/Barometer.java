@@ -19,7 +19,7 @@
 
 import java.util.Random ;   // to simulate random fluctuations.
 
-public class Barometer {
+public class Barometer implements IBarometer{
     private final double MIN = 27.0 ;       // minimum reading
     private final double MAX = 32.0 ;       // maximum reading
     private final double DEFAULT = 29.92 ;  // default reading.
@@ -70,5 +70,10 @@ public class Barometer {
         }
 
         return currentPressure ;
+    }
+
+    @Override
+    public double getPressure() {
+        return pressure();
     }
 }
