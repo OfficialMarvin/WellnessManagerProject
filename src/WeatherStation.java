@@ -44,12 +44,12 @@ public class WeatherStation extends Observable implements Runnable {
      */
     public WeatherStation(ITempSensor tempSensor, IBarometer barometer) {
         //sensor = new KelvinTempSensor() ;
-        sensor = tempSensor
+        sensor = tempSensor;
         currentReading = sensor.reading() ;
 
         //barSens = new Barometer();
-        barSens = barometer
-        barReading = barSens.pressure();
+        barSens = barometer;
+        barReading = barSens.getPressure();
     }
 
     /*
@@ -68,7 +68,7 @@ public class WeatherStation extends Observable implements Runnable {
              */
             synchronized(this) {
                 currentReading = sensor.reading();
-                barReading = barSens.pressure();
+                barReading = barSens.getPressure();
             }
             setChanged() ;
             notifyObservers() ;

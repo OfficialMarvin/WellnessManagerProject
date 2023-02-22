@@ -56,12 +56,13 @@ public class TextUI implements Observer {
      */
     public static void main(String[] args) {
         //WeatherStation ws = new WeatherStation() ;
-        Thread thread = new Thread(ws) ;
-        TextUI ui = new TextUI(ws) ;
-        ITempSensor tempSensor = new KelvinTempSensor();
+        ITempSensor tempSensor = new KelvinTempSensorAdapter(new KelvinTempSensor());
         IBarometer barometer = new Barometer();
         WeatherStation weatherStation = new WeatherStation(tempSensor, barometer);
-
+        Thread thread = new Thread(weatherStation) ;
+        TextUI ui = new TextUI(weatherStation) ;
+        SwingUI swingUI = new SwingUI(weatherStation) ;
+        AWTUI awtui= new AWTUI(weatherStation);
         thread.start() ;
     }
 }
