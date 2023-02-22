@@ -25,11 +25,12 @@ import java.util.Observable;
 
 public class WeatherStation extends Observable implements Runnable {
 
-    private final KelvinTempSensor sensor ; // Temperature sensor.
+    //private final KelvinTempSensor sensor ; // Temperature sensor.
+    private final ITempSensor sensor;
 
-    private Barometer barSens;
+    //private Barometer barSens;
     private double barReading;
-
+    private IBarometer barSens;
 
 
     private final long PERIOD = 1000 ;      // 1 sec = 1000 ms
@@ -41,11 +42,13 @@ public class WeatherStation extends Observable implements Runnable {
      * When a WeatherStation object is created, it in turn creates the sensor
      * object it will use.
      */
-    public WeatherStation() {
-        sensor = new KelvinTempSensor() ;
+    public WeatherStation(ITempSensor tempSensor, IBarometer barometer) {
+        //sensor = new KelvinTempSensor() ;
+        sensor = tempSensor
         currentReading = sensor.reading() ;
 
-        barSens = new Barometer();
+        //barSens = new Barometer();
+        barSens = barometer
         barReading = barSens.pressure();
     }
 
