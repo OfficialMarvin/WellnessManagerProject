@@ -1,0 +1,5 @@
+1. The component role would be an abstract class 'file', which is what both files and folders can be used as. The leaf role would be the text and sound classes, which are elements in a file but cant store more files. The composite role would be the folder which can hold files including other folders.
+
+2. For the drawing editor, the component role would be anything drawable such as the other roles. The leafs would be the rectangles and ellipses classes, which have info but cant have children. The composite role would be the group class, which can have children including other groups.
+
+3. A music app could have the same composite pattern. The component role can be a 'track' which can have the same things done to it such as downloading or liking. The leaf role can be things like songs, podcasts, and instrumentals which have information but cant have subcomponents. The composite would be a playlist which has songs, podcasts, instrumentals and can even have sub-playlists within it.
