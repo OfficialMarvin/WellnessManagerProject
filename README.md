@@ -1,1 +1,1 @@
-# swenActivity5
+Wellness Manager - Version 1.0
