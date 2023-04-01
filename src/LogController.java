@@ -50,11 +50,11 @@ public class LogController {
     }
 
     public void updateWeight(double weight) {
-        dailyLog.setWeight(weight);
+        DailyLog.setWeight(weight);
     }
 
     public void updateCalorieLimit(double calorieLimit) {
-        dailyLog.setCalorieLimit(calorieLimit);
+        DailyLog.setCalorieLimit(calorieLimit);
     }
 
     public void addFoodToLog(String foodName, double count) {

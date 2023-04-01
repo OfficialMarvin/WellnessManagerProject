@@ -39,10 +39,12 @@ public class DailyLog {
             }
             writer.close();
         } catch (IOException e) {
-            logView.displayError("Error saving to CSV file: " + e.getMessage());
+            LogView.displayError("Error saving to CSV file: " + e.getMessage());
         }
     }
+    public double setWeight(){
 
+    }
     public double checkCalorieLimit(FoodCollection foods) {
         double totalCalories = 0.0;
         Map<String, Double> entry = foodEntries.get(LocalDate.now());
