@@ -1,81 +1,57 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DailyLog {
 
-    private double weight; // in kilograms
-    private double calorieLimit;
-    private final Map<String, Double> foodEntries = new HashMap<>();
+    private double weight = 150.0; // in pounds
+    private double calorieLimit = 2000.0;
+    private final Map<LocalDate, Map<String, Double>> foodEntries = new HashMap<>();
 
     public void addFoodEntry(String foodName, double count) {
-        Double existingCount = foodEntries.get(foodName);
-        if (existingCount == null) {
-            existingCount = 0.0;
-        }
-        foodEntries.put(foodName, existingCount + count);
+        Map<String, Double> entry = foodEntries.getOrDefault(LocalDate.now(), new HashMap<>());
+        entry.put(foodName, entry.getOrDefault(foodName, 0.0) + count);
+        foodEntries.put(LocalDate.now(), entry);
+        saveToCSVFile();
     }
 
     public void removeFoodEntry(String foodName) {
-        foodEntries.remove(foodName);
-    }
-
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
-
-    public double getWeight() {
-        return weight;
-    }
-
-
-    public boolean checkCalorieLimit(FoodCollection foods){
-        double totalCalories=0.0;
-
-        for(Map.Entry<String, Double> entry :foodEntries.entrySet()){
-            FoodComponent fc=foods.getFood(entry.getKey());
-            totalCalories+=fc.getCalories()*entry.getValue();
+        Map<String, Double> entry = foodEntries.get(LocalDate.now());
+        if (entry != null) {
+            entry.remove(foodName);
+            foodEntries.put(LocalDate.now(), entry);
+            saveToCSVFile();
         }
-        return totalCalories<=calorieLimit;
     }
 
-    public boolean isUnderWeight(){
-        // arbitrary limit to consider underweight: BMI < 18.5
-        final int UNDERWEIGHT_BMI_THRESHOLD=18;
-
-        try{
-            double bmiValue=(weight/(LogController.height*LogController.height));
-
-            if(bmiValue<UNDERWEIGHT_BMI_THRESHOLD)
-                return true;
-            else
-                return false;
-
-        }catch(ArithmeticException e){
-            System.out.println("Please enter valid height values");
+    public void saveToCSVFile() {
+        try {
+            FileWriter writer = new FileWriter("log.csv");
+            writer.write(String.format("%04d,%02d,%02d,w,%.2f\n", LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), weight));
+            writer.write(String.format("%04d,%02d,%02d,c,%.2f\n", LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), calorieLimit));
+            for (Map.Entry<LocalDate, Map<String, Double>> dateEntry : foodEntries.entrySet()) {
+                LocalDate date = dateEntry.getKey();
+                for (Map.Entry<String, Double> foodEntry : dateEntry.getValue().entrySet()) {
+                    writer.write(String.format("%04d,%02d,%02d,f,%s,%.2f\n", date.getYear(), date.getMonthValue(), date.getDayOfMonth(), foodEntry.getKey(), foodEntry.getValue()));
+                }
+            }
+            writer.close();
+        } catch (IOException e) {
+            logView.displayError("Error saving to CSV file: " + e.getMessage());
         }
-
-        return false;//default
-
     }
 
-
-
-
-
-
-
-    public void setCalorieLimit(double calorieLimit) {
-        this.calorieLimit = calorieLimit;
+    public double checkCalorieLimit(FoodCollection foods) {
+        double totalCalories = 0.0;
+        Map<String, Double> entry = foodEntries.get(LocalDate.now());
+        if (entry != null) {
+            for (Map.Entry<String, Double> foodEntry : entry.entrySet()) {
+                FoodComponent fc = foods.getFood(foodEntry.getKey());
+                totalCalories += fc.getCalories() * foodEntry.getValue();
+            }
+        }
+        return totalCalories;
     }
-
-    public double getCalorieLimit() {
-        return calorieLimit;
-    }
-
-    //Getter fro food entries
-    public Map<String, Double> getFoodEntries(){
-        return foodEntries;
-    }
-
 }
