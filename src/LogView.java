@@ -7,7 +7,7 @@ public class LogView {
 
     }
 
-    void displayError(String message) {
+    static void displayError(String message) {
 
     }
 

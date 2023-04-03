@@ -6,8 +6,8 @@ import java.util.Map;
 
 public class DailyLog {
 
-    private double weight = 150.0; // in pounds
-    private double calorieLimit = 2000.0;
+    private static double weight = 150.0; // in pounds
+    private static double calorieLimit = 2000.0;
     private final Map<LocalDate, Map<String, Double>> foodEntries = new HashMap<>();
 
     public void addFoodEntry(String foodName, double count) {
@@ -42,8 +42,12 @@ public class DailyLog {
             LogView.displayError("Error saving to CSV file: " + e.getMessage());
         }
     }
-    public double setWeight(){
+    public static void setCalorieLimit(double calorieLimit) {
+        DailyLog.calorieLimit = calorieLimit;
+    }
 
+    public static void setWeight(double weight){
+        DailyLog.weight = weight;
     }
     public double checkCalorieLimit(FoodCollection foods) {
         double totalCalories = 0.0;

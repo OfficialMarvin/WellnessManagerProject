@@ -1,9 +1,11 @@
+import java.time.LocalDate;
+
 public class LogModel{
     void loadLogData(String fileName) {
 
     }
 
-    void saveLogData(String fileName) {
+    void saveLogData(LocalDate date, String fileName) {
 
     }
 
