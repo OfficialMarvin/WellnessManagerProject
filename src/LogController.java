@@ -16,7 +16,7 @@ public class LogController {
         this.foodCollection = new FoodCollection();
         LogController.height = height;
 
-        foodCollection.loadFoods("foods.csv");
+        foodCollection.loadFoods();
         logModel.loadLogData("log.csv");
 
         selectDate(LocalDate.now());
@@ -71,7 +71,7 @@ public class LogController {
     }
 
     public void saveData() {
-        foodCollection.saveFoods("foods.csv");
+        foodCollection.saveFoods();
         logModel.saveLogData("log.csv");
     }
 }

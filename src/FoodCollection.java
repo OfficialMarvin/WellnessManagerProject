@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
 
 public class FoodCollection {
     private Map<String, FoodComponent> foods = new HashMap<>();
@@ -18,12 +20,8 @@ public class FoodCollection {
         return foods.get(name);
     }
 
-    public void loadFoods(String fileName){
-        Path filePath = Paths.get(fileName);
-        if(!Files.exists(filePath)){
-            System.out.println("File not exists!");
-            return;
-        }
+    public void loadFoods(){
+        Path filePath = Paths.get("foods.csv");
 
         try(BufferedReader reader = Files.newBufferedReader(filePath)){
             String line;
@@ -57,8 +55,8 @@ public class FoodCollection {
         }
     }
 
-    public void saveFoods(String fileName) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+    public void saveFoods() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("foods.csv"))) {
             for (FoodComponent food : foods.values()) {
                 if (food instanceof BasicFood) {
                     writer.write("b," + food.getName() + "," + food.getCalories() + "," + ((BasicFood)food).getFat() + "," + ((BasicFood)food).getCarb() + "," + ((BasicFood)food).getProtein());

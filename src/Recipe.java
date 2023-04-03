@@ -13,7 +13,7 @@ public class Recipe implements FoodComponent {
     public void addFood(FoodComponent food, double servings) {
         ingredients.put(food, servings);
     }
-    public Map getIngredients(){
+    public Map<FoodComponent, Double> getIngredients(){
         return this.ingredients;
     }
     @Override
