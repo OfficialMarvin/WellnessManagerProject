@@ -21,7 +21,7 @@ public class Main {
         ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(logForm.logView1().getRecipe());
 
-        double height = 1.75; // Set the height to 1.75 meters for example purposes
+        double height = 1.75;
         logController = new LogController(logModel, logForm.logView1(), height);
 
         // load data
