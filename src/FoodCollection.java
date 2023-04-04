@@ -2,25 +2,22 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 
 public class FoodCollection {
-    private Map<String, FoodComponent> foods = new HashMap<>();
+    private static Map<String, FoodComponent> foods = new HashMap<>();
 
-    public void addFood(FoodComponent food) {
+    public static void addFood(FoodComponent food) {
         foods.put(food.getName(), food);
     }
 
-    public FoodComponent getFood(String name) {
+    public static FoodComponent getFood(String name) {
         return foods.get(name);
     }
 
-    public void loadFoods(){
+    public static void loadFoods(){
         Path filePath = Paths.get("foods.csv");
 
         try(BufferedReader reader = Files.newBufferedReader(filePath)){
@@ -55,7 +52,7 @@ public class FoodCollection {
         }
     }
 
-    public void saveFoods() {
+    public static void saveFoods() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("foods.csv"))) {
             for (FoodComponent food : foods.values()) {
                 if (food instanceof BasicFood) {
@@ -74,4 +71,7 @@ public class FoodCollection {
             System.out.println(e);
         }
     }
+
+
 }
+

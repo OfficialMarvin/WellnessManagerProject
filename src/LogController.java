@@ -1,6 +1,6 @@
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+
 
 public class LogController {
 
@@ -8,7 +8,7 @@ public class LogController {
     private final LogView1 logView;
     private final FoodCollection foodCollection;
     private DailyLog dailyLog;
-    public static double height; // in meters
+    public static double height;
 
     public LogController(LogModel logModel, LogView1 logView, double height) {
         this.logModel = logModel;
@@ -46,7 +46,7 @@ public class LogController {
             dailyLog = new DailyLog();
             logModel.saveLogData(date, String.valueOf(dailyLog));
         }
-        logView.displayDailyLog(dailyLog);
+        //logView.displayDailyLog(dailyLog);
     }
 
     public void updateWeight(double weight) {
@@ -70,9 +70,15 @@ public class LogController {
         dailyLog.removeFoodEntry(foodName);
     }
 
+    public void loadData() {
+        foodCollection.loadFoods();
+        DailyLog.loadLog();
+    }
+
     public void saveData() {
         LocalDate date = LocalDate.now();
         foodCollection.saveFoods();
-        logModel.saveLogData(date,"log.csv");
+        DailyLog.saveLog();
     }
+
 }
