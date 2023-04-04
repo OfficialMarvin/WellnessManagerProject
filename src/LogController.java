@@ -5,12 +5,12 @@ import java.util.List;
 public class LogController {
 
     private final LogModel logModel;
-    private final LogView logView;
+    private final LogView1 logView;
     private final FoodCollection foodCollection;
     private DailyLog dailyLog;
     public static double height; // in meters
 
-    public LogController(LogModel logModel, LogView logView, double height) {
+    public LogController(LogModel logModel, LogView1 logView, double height) {
         this.logModel = logModel;
         this.logView = logView;
         this.foodCollection = new FoodCollection();

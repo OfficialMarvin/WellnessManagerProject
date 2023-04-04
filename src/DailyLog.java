@@ -39,7 +39,7 @@ public class DailyLog {
             }
             writer.close();
         } catch (IOException e) {
-            LogView.displayError("Error saving to CSV file: " + e.getMessage());
+            LogView1.displayError("Error saving to CSV file: " + e.getMessage());
         }
     }
     public static void setCalorieLimit(double calorieLimit) {
