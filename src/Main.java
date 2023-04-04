@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -16,6 +17,9 @@ public class Main {
         LogView1 logView = new LogView1();
         LogForm logForm = new LogForm();
         logForm.setVisible(true);
+
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(logForm.logView1().getRecipe());
 
         double height = 1.75; // Set the height to 1.75 meters for example purposes
         logController = new LogController(logModel, logForm.logView1(), height);
