@@ -41,10 +41,10 @@ public class LogController {
     }
 
     public void selectDate(LocalDate date) {
-        dailyLog = logModel.loadLogData(date);
+        dailyLog = logModel.loadLogData(String.valueOf(date));
         if (dailyLog == null) {
             dailyLog = new DailyLog();
-            logModel.saveLogData(date, dailyLog);
+            logModel.saveLogData(date, String.valueOf(dailyLog));
         }
         logView.displayDailyLog(dailyLog);
     }
@@ -71,7 +71,8 @@ public class LogController {
     }
 
     public void saveData() {
+        LocalDate date = LocalDate.now();
         foodCollection.saveFoods();
-        logModel.saveLogData("log.csv");
+        logModel.saveLogData(date,"log.csv");
     }
 }
