@@ -14,8 +14,11 @@ public class Main {
         // initialize logcontroller with model and view
         LogModel logModel = new LogModel();
         LogView1 logView = new LogView1();
+        LogForm logForm = new LogForm();
+        logForm.setVisible(true);
+
         double height = 1.75; // Set the height to 1.75 meters for example purposes
-        logController = new LogController(logModel, logView, height);
+        logController = new LogController(logModel, logForm.logView1(), height);
 
         // load data
         logController.loadData();
