@@ -1,0 +1,8 @@
+1. FoodComponent (interface): Represents a basic food or recipe.
+2. BasicFood (class): Implements FoodComponent, represents a basic food.
+3. Recipe (class): Implements FoodComponent, represents a recipe.
+4. FoodCollection (class): Manages the food components (basic foods and recipes).
+5. DailyLog (class): Represents a daily log containing food intake, weight, and calorie limit.
+6. LogController (class): Handles user interactions and updates the model and view.
+7. LogModel (class): Manages the state of the application, including DailyLog and FoodCollection.
+8. LogView (class): Displays the state of the application to the user.
