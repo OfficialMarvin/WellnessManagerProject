@@ -32,6 +32,29 @@ public class LogController1{
         System.out.println(logView);
         System.out.println(this.logController);
 
+
+
+        logForm.logView1().getComboBox1().addActionListener(e -> {
+            String selectedOption = (String) logForm.logView1().getComboBox1().getSelectedItem();
+
+            if (selectedOption.equals("Daily Food Items Consumed")) {
+                logForm.logView1().setDisplay(selectedOption);
+            } else if (selectedOption.equals("Daily Exercises Performed")) {
+
+            } else if (selectedOption.equals("Daily Consumed Calories")) {
+
+            } else if (selectedOption.equals("Daily Expended Calories")) {
+
+            } else if (selectedOption.equals("Daily Net Calories")) {
+
+            } else if (selectedOption.equals("Daily Weight")) {
+
+            } else if (selectedOption.equals("Daily Nutrition Breakdown")) {
+
+            }
+        });
+
+
         logForm.logView1().getDateButton().addActionListener(e -> {
         String dateString = logForm.logView1().getDateField().getText();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");

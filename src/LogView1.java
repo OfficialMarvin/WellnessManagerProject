@@ -37,6 +37,10 @@ public class LogView1 {
     private JTextField dateField;
     private JComboBox comboBox1;
 
+    public JComboBox getComboBox1(){
+        return comboBox1;
+    }
+
 
     public JPanel getjPanel() {
         return jPanel;
@@ -162,6 +166,14 @@ public class LogView1 {
 
     public void setFatTxtField(JTextField fatTxtField) {
         this.fatTxtField = fatTxtField;
+    }
+
+    public JTextArea getDisplay(){
+        return display;
+    }
+
+    public void setDisplay(String displayy){
+        display.setText(displayy);
     }
 
     public JLabel getNameLbl() {
