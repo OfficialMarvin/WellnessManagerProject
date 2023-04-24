@@ -22,6 +22,12 @@ public class LogView1 {
     private JLabel ingredientsLbl;
     private JTextField weightField;
     private JLabel weightLbl;
+    private JTextField calTxtField;
+    private JLabel CalLimit;
+    private JTextField exerTxtField;
+    private JLabel Exname;
+    private JTextField burnTxtField;
+    private JLabel burnedLabel;
     private JTextArea textArea1;
 
 
@@ -57,13 +63,36 @@ public class LogView1 {
         this.addButton = addButton;
     }
 
-
     public JTextField getNameTxtField() {
         return nameTxtField;
     }
 
     public void setNameTxtField(JTextField nameTxtField) {
         this.nameTxtField = nameTxtField;
+    }
+
+    public JTextField getCalTxtField() {
+        return calTxtField;
+    }
+
+    public void setCalTxtField(JTextField calTxtField) {
+        this.calTxtField = calTxtField;
+    }
+
+    public JTextField getExerTxtField() {
+        return exerTxtField;
+    }
+
+    public void setExerTxtField(JTextField calTxtField) {
+        this.exerTxtField = exerTxtField;
+    }
+
+    public JTextField getBurnTxtField() {
+        return burnTxtField;
+    }
+
+    public void setBurnTxtField(JTextField burnTxtField) {
+        this.burnTxtField = burnTxtField;
     }
 
     public JTextField getProteinTxtField() {

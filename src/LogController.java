@@ -38,7 +38,10 @@ public class LogController {
             if (food != null) {
                 recipe.addFood(food, quantity);
             } else {
-                logView.displayError("Food not found: " + ingredientName);
+                // Add the missing food as a basic food with 0's for the other arguments
+                addBasicFood(ingredientName, 0, 0, 0, 0);
+                food = foodCollection.getFood(ingredientName);
+                recipe.addFood(food, quantity);
             }
         }
         foodCollection.addFood(recipe);

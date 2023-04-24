@@ -19,5 +19,7 @@ public class LogModel{
         FoodCollection.saveFoods();
     }
 
+
+
 }
 
