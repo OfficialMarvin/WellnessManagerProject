@@ -11,21 +11,25 @@ public class LogController1{
     private Recipe recipeModel;
     private LogForm logForm;
 
-    private LogController logController;
+    LogModel logModel = new LogModel();
+    LogView1 logView = new LogView1();
+    double height = 1.75;
+
+    LogController logController;
 
     private ArrayList<BasicFood> basicFoodArrayList = new ArrayList<>();
 
-    public LogController1(LogController logController) {
-        this.logController = logController;
-    }
 
     public LogController1(BasicFood basicFoodModel, DailyLog dailyLogModel, FoodCollection foodCollectionModel,LogController logController,Recipe recipeModel, LogForm logForm) {
         this.basicFoodModel = basicFoodModel;
         this.dailyLogModel = dailyLogModel;
         this.foodCollectionModel = foodCollectionModel;
         this.recipeModel = recipeModel;
-        this.logController = logController;
+        this.logController = new LogController(logModel, logView, height);
         this.logForm = logForm;
+        System.out.println(logModel);
+        System.out.println(logView);
+        System.out.println(this.logController);
 
 
 
@@ -50,22 +54,42 @@ public class LogController1{
 
             System.out.println(foodName + todaysDate);
 
-            double caloriesNum = Double.parseDouble(calories);
-            double fatNum = Double.parseDouble(fat);
-            double proteinNum = Double.parseDouble(protein);
-            double carbNum = Double.parseDouble(carb);
-            double weightNum = Double.parseDouble(weight);
+            double caloriesNum = 0.0;
+            if (!calories.isEmpty()) {
+                caloriesNum = Double.parseDouble(calories);
+            }
+
+            double fatNum = 0.0;
+            if (!fat.isEmpty()) {
+                fatNum = Double.parseDouble(fat);
+            }
+
+            double proteinNum = 0.0;
+            if (!protein.isEmpty()) {
+                proteinNum = Double.parseDouble(protein);
+            }
+
+            double carbNum = 0.0;
+            if (!carb.isEmpty()) {
+                carbNum = Double.parseDouble(carb);
+            }
+
+            double weightNum = 0.0;
+            if (!weight.isEmpty()) {
+                weightNum = Double.parseDouble(weight);
+            }
 
             if(buttonForBasicFood.isSelected()){
                BasicFood newBasicFood = new BasicFood(foodName,caloriesNum,fatNum,carbNum,proteinNum);
-                System.out.println("trying to add basic food");
-               logController.addBasicFood(foodName,caloriesNum,fatNum,carbNum,proteinNum);
+                System.out.println("trying to add basic food" + foodName+caloriesNum+fatNum+carbNum+proteinNum);
+                this.logController.addBasicFood(foodName,caloriesNum,fatNum,carbNum,proteinNum);
                basicFoodArrayList.add(newBasicFood);
+                this.logController.saveData();
             }
             else if(buttonForRecipe.isSelected()){
                 Recipe newRecipe = new Recipe(recipe);
-                //FIGURE OUT HOW TO ADD INGREDIENTS AND NUMBERS, it does not need to be map I dont think. Cause that makes GUI so
-                //hard to do.
+                this.logController.addRecipe(recipe, ingredientsAndQuantity);
+                this.logController.saveData();
             }
 
             logForm.logView1().getNameTxtField().setText(" ");
@@ -77,7 +101,7 @@ public class LogController1{
                logForm.logView1().getRecipeField().setText(" ");
                logForm.logView1().getIngredientsField().setText(" ");
 
-                logForm.logView1().getTextArea1().setText(basicFoodArrayList.toString());
+                //logForm.logView1().getTextArea1().setText(basicFoodArrayList.toString());
 
 
 

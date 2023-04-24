@@ -25,20 +25,25 @@ public class LogController {
     public void addBasicFood(String name, double calories, double fat, double carb, double protein) {
         BasicFood food = new BasicFood(name, calories, fat, carb, protein);
         foodCollection.addFood(food);
+        System.out.println("added basic food: " + food.getName());
     }
 
-    public void addRecipe(String name, List<String> foodNames, List<Double> foodCounts) {
+    public void addRecipe(String name, String IngredientsNQuantity) {
         Recipe recipe = new Recipe(name);
-        for (int i = 0; i < foodNames.size(); i++) {
-            FoodComponent food = foodCollection.getFood(foodNames.get(i));
+        String[] ingredientsNQuantity = IngredientsNQuantity.split(",");
+        for (int i = 0; i < ingredientsNQuantity.length; i += 2) {
+            String ingredientName = ingredientsNQuantity[i];
+            double quantity = Double.parseDouble(ingredientsNQuantity[i + 1]);
+            FoodComponent food = foodCollection.getFood(ingredientName);
             if (food != null) {
-                recipe.addFood(food, foodCounts.get(i));
+                recipe.addFood(food, quantity);
             } else {
-                logView.displayError("Food not found: " + foodNames.get(i));
+                logView.displayError("Food not found: " + ingredientName);
             }
         }
         foodCollection.addFood(recipe);
     }
+
 
     public void selectDate(LocalDate date) {
         dailyLog = logModel.loadLogData(String.valueOf(date));

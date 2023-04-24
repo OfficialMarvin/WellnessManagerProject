@@ -19,7 +19,6 @@ public class LogForm extends JFrame {
     public LogForm(){
         this.logView1 = new LogView1();
 
-        // Add the following code after the initialization of logView1
         LogController1 logController1 = new LogController1(basicFoodModel, dailyLogModel, foodCollectionModel, logController, recipeModel, this);
 
         JPanel content = logView1.getMyPanel();

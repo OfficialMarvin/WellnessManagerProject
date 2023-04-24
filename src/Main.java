@@ -106,6 +106,14 @@ public class Main {
 
                     List<String> ingredients = new ArrayList<>();
                     List<Double> quantities = new ArrayList<>();
+                    String ingredientsNQuantity = "";
+                    for (int i = 0; i < ingredients.size(); i++) {
+                        ingredientsNQuantity += ingredients.get(i) + ", " + quantities.get(i);
+                        if (i < ingredients.size() - 1) {
+                            ingredientsNQuantity += ", ";
+                        }
+                    }
+
 
                     boolean addIngredients = true;
                     while (addIngredients) {
@@ -122,7 +130,7 @@ public class Main {
                         }
                     }
 
-                    logController.addRecipe(recipeName, ingredients, quantities);
+                    logController.addRecipe(recipeName, ingredientsNQuantity);
                     break;
                 case 7:
                     // log for specific date
