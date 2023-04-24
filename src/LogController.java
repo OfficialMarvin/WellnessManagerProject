@@ -58,6 +58,7 @@ public class LogController {
     }
 
     public void updateWeight(double weight) {
+        System.out.println("log tried to set weight");
         DailyLog.setWeight(weight);
     }
 
@@ -78,12 +79,17 @@ public class LogController {
         dailyLog.removeFoodEntry(foodName);
     }
 
+    public void addExer(String name, float calories){
+        Exercises.addExercise(name,calories);
+    }
+
     public void loadData() {
         foodCollection.loadFoods();
         DailyLog.loadLog();
     }
 
     public void saveData() {
+        System.out.println("DATA SAVED");
         LocalDate date = LocalDate.now();
         foodCollection.saveFoods();
         DailyLog.saveLog();

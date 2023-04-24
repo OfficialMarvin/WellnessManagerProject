@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Exercises {
-    private List<Exercise> exerciseList;
-
+    private static List<Exercise> exerciseList;
     public Exercises() {
         exerciseList = new ArrayList<>();
     }
@@ -31,7 +31,7 @@ public class Exercises {
         }
     }
 
-    public void saveExercises() {
+    public static void saveExercises() {
         Path path = Paths.get("exercise.csv");
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             for (Exercise exercise : exerciseList) {
@@ -42,4 +42,28 @@ public class Exercises {
             System.err.println("Error writing exercise.csv: " + e.getMessage());
         }
     }
+    public static Exercise getExercise(String exerciseName) {
+        List<Exercise> exercises = new ArrayList<>();
+        // ... load exercises from a file ...
+        for (Exercise exercise : exercises) {
+            if (exercise.getName().equalsIgnoreCase(exerciseName)) {
+                return exercise;
+            }
+        }
+        return null;
+    }
+
+    public static void addExercise(String name, float calories) {
+        Exercise newExercise = new Exercise(name, calories);
+        //exerciseList.add(newExercise);
+
+        Path path = Paths.get("exercise.csv");
+        try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.APPEND)) {
+            writer.write(String.format("e,%s,%.1f", name, calories));
+            writer.newLine();
+        } catch (IOException e) {
+            System.err.println("Error writing exercise.csv: " + e.getMessage());
+        }
+    }
+
 }

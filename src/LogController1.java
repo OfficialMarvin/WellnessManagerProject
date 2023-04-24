@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,6 +32,13 @@ public class LogController1{
         System.out.println(logView);
         System.out.println(this.logController);
 
+        logForm.logView1().getDateButton().addActionListener(e -> {
+        String dateString = logForm.logView1().getDateField().getText();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        LocalDate date = LocalDate.parse(dateString, formatter);
+        DailyLog.setCurrentDate(date);
+                });
+
 
 
         logForm.logView1().getAddButton().addActionListener(e ->{
@@ -47,6 +55,13 @@ public class LogController1{
 
             JRadioButton buttonForBasicFood = logForm.logView1().getBasicFoodRadioButton();
             JRadioButton buttonForRecipe = logForm.logView1().getRecipe();
+
+            String calLimit = logForm.logView1().getCalTxtField().getText();
+
+            String exersize = logForm.logView1().getExerTxtField().getText();
+            String burned = logForm.logView1().getBurnTxtField().getText();
+            String ExerLog = logForm.logView1().getExerLogField().getText();
+            String mins = logForm.logView1().getMinsField().getText();
 
             JTextArea areaForText = logForm.logView1().getTextArea1();
 
@@ -92,6 +107,23 @@ public class LogController1{
                 this.logController.saveData();
             }
 
+            if(!exersize.isEmpty() & !burned.isEmpty()){
+                this.logController.addExer(exersize, Float.parseFloat(burned));
+                System.out.println("exersize sent log1");
+            }
+
+            if(!weight.isEmpty()){
+                System.out.println("NOT EMPTY");
+                DailyLog.setWeight(weightNum);
+            }
+
+            if(!calories.isEmpty()){
+                DailyLog.setCalorieLimit(caloriesNum);
+            }
+
+            if(!ExerLog.isEmpty() & !mins.isEmpty()){
+                DailyLog.addExerciseEntry(ExerLog, Double.parseDouble(mins));
+            }
             logForm.logView1().getNameTxtField().setText(" ");
                logForm.logView1().getCaloriesTxtfield().setText(" ");
                logForm.logView1().getFatTxtField().setText(" ");
@@ -100,6 +132,11 @@ public class LogController1{
                logForm.logView1().getWeightField().setText(" ");
                logForm.logView1().getRecipeField().setText(" ");
                logForm.logView1().getIngredientsField().setText(" ");
+            logForm.logView1().getCalTxtField().setText(" ");
+            logForm.logView1().getBurnTxtField().setText(" ");
+            logForm.logView1().getExerTxtField().setText(" ");
+            logForm.logView1().getExerLogField().setText(" ");
+            logForm.logView1().getMinsField().setText(" ");
 
                 //logForm.logView1().getTextArea1().setText(basicFoodArrayList.toString());
 

@@ -1,44 +1,74 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class DailyLog {
 
     private static double weight = 150.0; // in pounds
     private static double calorieLimit = 2000.0;
     private static final Map<LocalDate, Map<String, Double>> foodEntries = new HashMap<>();
+    private static final Map<LocalDate, List<String>> exerciseEntries = new HashMap<>();
+    private static LocalDate currentDate = LocalDate.now();
 
-    public void addFoodEntry(String foodName, double count) {
-        Map<String, Double> entry = foodEntries.getOrDefault(LocalDate.now(), new HashMap<>());
-        entry.put(foodName, entry.getOrDefault(foodName, 0.0) + count);
-        foodEntries.put(LocalDate.now(), entry);
-        saveLog();
+    public static void setCurrentDate(LocalDate date) {
+        DailyLog.currentDate = date;
+        System.out.println(DailyLog.currentDate);
     }
 
-    public void removeFoodEntry(String foodName) {
-        Map<String, Double> entry = foodEntries.get(LocalDate.now());
+    public static void addExerciseEntry(String exerciseName, double minutes) {
+        List<String> entry = exerciseEntries.getOrDefault(currentDate, new ArrayList<>());
+        entry.add(String.format("%s,%.2f", exerciseName, minutes));
+        exerciseEntries.put(currentDate, entry);
+        DailyLog.saveLog();
+    }
+
+    public void removeExerciseEntry(String exerciseName, double minutes) {
+        List<String> entry = exerciseEntries.get(currentDate);
         if (entry != null) {
-            entry.remove(foodName);
-            foodEntries.put(LocalDate.now(), entry);
+            entry.remove(String.format("%s,%.2f", exerciseName, minutes));
+            exerciseEntries.put(currentDate, entry);
             saveLog();
         }
     }
 
+    public void addFoodEntry(String foodName, double count) {
+        Map<String, Double> entry = foodEntries.getOrDefault(currentDate, new HashMap<>());
+        entry.put(foodName, entry.getOrDefault(foodName, 0.0) + count);
+        foodEntries.put(currentDate, entry);
+        saveLog();
+    }
+
+    public void removeFoodEntry(String foodName) {
+        Map<String, Double> entry = foodEntries.get(currentDate);
+        if (entry != null) {
+            entry.remove(foodName);
+            foodEntries.put(currentDate, entry);
+            saveLog();
+        }
+    }
+
+    private static boolean checkIfLineExists(FileWriter writer, String line) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader("log.csv"));
+        String csvLine;
+        while ((csvLine = reader.readLine()) != null) {
+            if (csvLine.equals(line)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void saveLog() {
         try {
-            FileWriter writer = new FileWriter("log.csv");
-            writer.write(String.format("%04d,%02d,%02d,w,%.2f\n", LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), weight));
-            writer.write(String.format("%04d,%02d,%02d,c,%.2f\n", LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), calorieLimit));
-            for (Map.Entry<LocalDate, Map<String, Double>> dateEntry : foodEntries.entrySet()) {
-                LocalDate date = dateEntry.getKey();
-                for (Map.Entry<String, Double> foodEntry : dateEntry.getValue().entrySet()) {
-                    writer.write(String.format("%04d,%02d,%02d,f,%s,%.2f\n", date.getYear(), date.getMonthValue(), date.getDayOfMonth(), foodEntry.getKey(), foodEntry.getValue()));
-                }
+            FileWriter writer = new FileWriter("log.csv", true);
+            if(checkIfLineExists(writer, String.format("%04d,%02d,%02d,w,%.2f\n", currentDate.getYear(), currentDate.getMonthValue(), currentDate.getDayOfMonth(), weight)) == false){
+                writer.write(String.format("%04d,%02d,%02d,w,%.2f\n", currentDate.getYear(), currentDate.getMonthValue(), currentDate.getDayOfMonth(), weight));
             }
+            if(checkIfLineExists(writer,String.format("%04d,%02d,%02d,c,%.2f\n", LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), calorieLimit)) == false){
+                writer.write(String.format("%04d,%02d,%02d,c,%.2f\n", LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), calorieLimit));
+            }
+            //Exercises.saveExercises();
+            FoodCollection.saveFoods();
             writer.close();
         } catch (IOException e) {
             LogView1.displayError("Error saving to CSV file: " + e.getMessage());
@@ -63,6 +93,13 @@ public class DailyLog {
                     foodMap.put(foodName, amount);
                     foodEntries.put(date, foodMap);
                 }
+                else if (type.equals("e")) {
+                    String exerciseName = fields[4];
+                    double minutes = Double.parseDouble(fields[5]);
+                    List<String> exerciseList = exerciseEntries.getOrDefault(date, new ArrayList<>());
+                    exerciseList.add(String.format("%s,%.2f", exerciseName, minutes));
+                    exerciseEntries.put(date, exerciseList);
+                }
             }
         } catch (IOException e) {
             LogView1.displayError("Error loading CSV file: " + e.getMessage());
@@ -73,9 +110,14 @@ public class DailyLog {
         DailyLog.calorieLimit = calorieLimit;
     }
 
+
     public static void setWeight(double weight){
+        System.out.println("weight changed");
         DailyLog.weight = weight;
+
     }
+
+
     public double checkCalorieLimit(FoodCollection foods) {
         double totalCalories = 0.0;
         Map<String, Double> entry = foodEntries.get(LocalDate.now());
@@ -83,6 +125,20 @@ public class DailyLog {
             for (Map.Entry<String, Double> foodEntry : entry.entrySet()) {
                 FoodComponent fc = foods.getFood(foodEntry.getKey());
                 totalCalories += fc.getCalories() * foodEntry.getValue();
+            }
+        }
+        List<String> exerciseEntry = exerciseEntries.get(LocalDate.now());
+        if (exerciseEntry != null) {
+            for (String exercise : exerciseEntry) {
+                String[] parts = exercise.split(",");
+                String exerciseName = parts[0];
+                double minutes = Double.parseDouble(parts[1]);
+                Exercise ex = Exercises.getExercise(exerciseName);
+                if (ex != null) {
+                    totalCalories -= ex.getCalories() * minutes;
+                } else {
+                    System.err.println("Exercise not found: " + exerciseName);
+                }
             }
         }
         return totalCalories;

@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.event.ActionListener;
 
 public class LogView1 {
     private JPanel panel1;
@@ -28,7 +29,13 @@ public class LogView1 {
     private JLabel Exname;
     private JTextField burnTxtField;
     private JLabel burnedLabel;
-    private JTextArea textArea1;
+    private JTextArea display;
+    private JTextField exerLogField;
+    private JTextField minsField;
+    private JLabel MinsLabel;
+    private JButton dateButton;
+    private JTextField dateField;
+    private JComboBox comboBox1;
 
 
     public JPanel getjPanel() {
@@ -59,8 +66,14 @@ public class LogView1 {
         return addButton;
     }
 
+    public JButton getDateButton() {return dateButton;};
+
     public void setAddButton(JButton addButton) {
         this.addButton = addButton;
+    }
+
+    public void setDateButton(JButton dateButton){
+        this.dateButton = dateButton;
     }
 
     public JTextField getNameTxtField() {
@@ -83,8 +96,16 @@ public class LogView1 {
         return exerTxtField;
     }
 
-    public void setExerTxtField(JTextField calTxtField) {
+    public void setExerTxtField(JTextField exerTxtField) {
         this.exerTxtField = exerTxtField;
+    }
+
+    public JTextField getDateField() {
+        return dateField;
+    }
+
+    public void setDateField(JTextField dateField) {
+        this.dateField = dateField;
     }
 
     public JTextField getBurnTxtField() {
@@ -101,6 +122,22 @@ public class LogView1 {
 
     public void setProteinTxtField(JTextField proteinTxtField) {
         this.proteinTxtField = proteinTxtField;
+    }
+
+    public JTextField getExerLogField() {
+        return exerLogField;
+    }
+
+    public void setExerLogField(JTextField exerLogField) {
+        this.exerLogField = exerLogField;
+    }
+
+    public JTextField getMinsField() {
+        return minsField;
+    }
+
+    public void setMinsField(JTextField minsField) {
+        this.minsField = minsField;
     }
 
     public JTextField getCaloriesTxtfield() {
@@ -216,11 +253,11 @@ public class LogView1 {
     }
 
     public JTextArea getTextArea1() {
-        return textArea1;
+        return display;
     }
 
     public void setTextArea1(JTextArea textArea1) {
-        this.textArea1 = textArea1;
+        this.display = textArea1;
     }
 
     void displayDailyLog(DailyLog dailyLog) {
@@ -234,6 +271,7 @@ public class LogView1 {
     static void displayError(String message) {
 
     }
+
 
 
     public JPanel getMyPanel(){

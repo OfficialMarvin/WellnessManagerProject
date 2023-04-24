@@ -139,7 +139,7 @@ public class Main {
                     break;
                 case 8:
                     // Save & exit
-                    logController.saveData();
+                    //logController.saveData();
                     System.out.println("Exiting...");
                     System.exit(0);
                     break;
