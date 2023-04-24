@@ -18,6 +18,7 @@ public class Main {
         LogForm logForm = new LogForm();
         logForm.setVisible(true);
 
+
         ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(logForm.logView1().getRecipe());
 
@@ -26,6 +27,8 @@ public class Main {
 
         // load data
         logController.loadData();
+
+
 
         while (true) {
             // choices

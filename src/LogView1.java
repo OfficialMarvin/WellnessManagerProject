@@ -57,6 +57,7 @@ public class LogView1 {
         this.addButton = addButton;
     }
 
+
     public JTextField getNameTxtField() {
         return nameTxtField;
     }
@@ -209,5 +210,6 @@ public class LogView1 {
     public JPanel getMyPanel(){
         return panel1;
     }
+
 
 }

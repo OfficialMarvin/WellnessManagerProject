@@ -2,6 +2,13 @@ import javax.swing.*;
 
 public class LogForm extends JFrame {
     private final LogView1 logView1;
+    private BasicFood basicFoodModel;
+    private DailyLog dailyLogModel;
+    private FoodCollection foodCollectionModel;
+    private Recipe recipeModel;
+    private LogForm logForm;
+
+    private LogController logController;
 
 
 
@@ -12,6 +19,9 @@ public class LogForm extends JFrame {
     public LogForm(){
         this.logView1 = new LogView1();
 
+        // Add the following code after the initialization of logView1
+        LogController1 logController1 = new LogController1(basicFoodModel, dailyLogModel, foodCollectionModel, logController, recipeModel, this);
+
         JPanel content = logView1.getMyPanel();
 
         this.setContentPane(content);
@@ -19,7 +29,6 @@ public class LogForm extends JFrame {
 
         this.setTitle("Log Gui");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
     }
 
     public LogView1 logView1() {return logView1;}
