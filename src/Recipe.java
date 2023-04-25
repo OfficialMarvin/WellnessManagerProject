@@ -16,6 +16,8 @@ public class Recipe implements FoodComponent {
     public Map<FoodComponent, Double> getIngredients(){
         return this.ingredients;
     }
+
+
     @Override
     public double getCalories() {
         double totalCalories = 0;

@@ -178,6 +178,7 @@ public class LogController1{
             logForm.logView1().getExerTxtField().setText(" ");
             logForm.logView1().getExerLogField().setText(" ");
             logForm.logView1().getMinsField().setText(" ");
+            logForm.logView1().getFoodCountField().setText(" ");
 
                 //logForm.logView1().getTextArea1().setText(basicFoodArrayList.toString());
 

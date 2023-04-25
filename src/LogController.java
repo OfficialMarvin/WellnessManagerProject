@@ -38,7 +38,6 @@ public class LogController {
             if (food != null) {
                 recipe.addFood(food, quantity);
             } else {
-                // Add the missing food as a basic food with 0's for the other arguments
                 addBasicFood(ingredientName, 0, 0, 0, 0);
                 food = foodCollection.getFood(ingredientName);
                 recipe.addFood(food, quantity);
@@ -54,7 +53,6 @@ public class LogController {
             dailyLog = new DailyLog();
             logModel.saveLogData(date, String.valueOf(dailyLog));
         }
-        //logView.displayDailyLog(dailyLog);
     }
 
     public void updateWeight(double weight) {
