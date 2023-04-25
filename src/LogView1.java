@@ -1,5 +1,12 @@
 import javax.swing.*;
 import java.awt.event.ActionListener;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 public class LogView1 {
     private JPanel panel1;
@@ -38,10 +45,14 @@ public class LogView1 {
     private JComboBox comboBox1;
     private JTextField foodCountField;
     private JLabel foodCountTxT;
+    private JPanel barchart;
 
     public JComboBox getComboBox1(){
         return comboBox1;
     }
+
+
+
 
 
     public JPanel getjPanel() {
@@ -51,6 +62,13 @@ public class LogView1 {
     public void setjPanel(JPanel jPanel) {
         this.jPanel = jPanel;
     }
+
+    public void setBarchart(JPanel jPanel){
+        this.jPanel = jPanel;
+    }
+
+    public JPanel getBarchart(){ return jPanel;}
+
 
     public JRadioButton getBasicFoodRadioButton() {
         return basicFoodRadioButton;
@@ -299,6 +317,68 @@ public class LogView1 {
     public JPanel getMyPanel(){
         return panel1;
     }
+
+    public ChartPanel makeBar() {
+        String dayNutData = DailyLog.getDayNut();
+        String[] dayNutValues = dayNutData.split(", ");
+
+        double totalFat = 0.0;
+        double totalCarb = 0.0;
+        double totalProtein = 0.0;
+
+        for (String dayNutValue : dayNutValues) {
+            String[] parts = dayNutValue.split(": ");
+            String nutrient = parts[0];
+            double percentage = Double.parseDouble(parts[1].replace("%", ""));
+
+            switch (nutrient) {
+                case "Fat":
+                    totalFat = percentage;
+                    break;
+                case "Carb":
+                    totalCarb = percentage;
+                    break;
+                case "Protein":
+                    totalProtein = percentage;
+                    break;
+                default:
+                    System.err.println("Unknown nutrient: " + nutrient);
+                    break;
+            }
+        }
+
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        dataset.addValue(totalFat, "Fat", "Fat");
+        dataset.addValue(totalCarb, "Carbohydrates", "Carbohydrates");
+        dataset.addValue(totalProtein, "Protein", "Protein");
+
+        JFreeChart barChart = ChartFactory.createBarChart(
+                DailyLog.getCurrentDate() + " Nutrient Intake",
+                "Nutrients",
+                "Percentage",
+                dataset,
+                PlotOrientation.VERTICAL,
+                true, true, false);
+
+        ChartPanel chartPanel = new ChartPanel(barChart);
+        chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+        System.out.println(totalCarb);
+        return chartPanel;
+    }
+
+
+    public void showGUI(ChartPanel chartPanel) {
+        JFrame frame = new JFrame();
+        frame.add(chartPanel);
+        frame.setTitle("Bar Graph");
+        frame.setSize(400, 400);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+
+
+
+
 
 
 }

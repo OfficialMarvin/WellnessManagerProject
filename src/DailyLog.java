@@ -3,7 +3,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.*;
 
 public class DailyLog {
@@ -17,6 +16,9 @@ public class DailyLog {
     public static void setCurrentDate(LocalDate date) {
         DailyLog.currentDate = date;
         System.out.println(DailyLog.currentDate);
+    }
+    public static LocalDate getCurrentDate(){
+        return DailyLog.currentDate;
     }
 
     public static void addExerciseEntry(String exerciseName, double minutes) {
@@ -299,5 +301,64 @@ public class DailyLog {
         }
         return 0.0;
     }
+    public static String getNutsForFood(String foodName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("foods.csv"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 6 && parts[1].equals(foodName)) {
+                    return parts[3] + ", " + parts[4] + ", " + parts[5];
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading foods.csv: " + e.getMessage());
+        }
+        return "0, 0, 0";
+    }
+    public static String getDayNut() {
+        String logFilePath = "log.csv";
+        double totalFat = 0.0;
+        double totalCarb = 0.0;
+        double totalProtein = 0.0;
+        System.out.println(currentDate);
+
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(logFilePath));
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+
+                if (parts.length >= 4) {
+                    LocalDate date = LocalDate.of(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
+
+
+                    if (date.equals(currentDate) && parts[3].equals("f")) {
+                        String foodName = parts[4];
+                        String nutrients = getNutsForFood(foodName); // Assuming this function is already implemented
+                        String[] nutrientValues = nutrients.split(",");
+
+                        totalFat += Double.parseDouble(nutrientValues[0]);
+                        totalCarb += Double.parseDouble(nutrientValues[1]);
+                        totalProtein += Double.parseDouble(nutrientValues[2]);
+                    }
+                }
+            }
+
+            reader.close();
+        } catch (IOException e) {
+            System.err.println("Error reading CSV file: " + e.getMessage());
+        }
+
+        double nutrientTotal = totalFat + totalCarb + totalProtein;
+        double fatPercentage = (totalFat / nutrientTotal) * 100;
+        double carbPercentage = (totalCarb / nutrientTotal) * 100;
+        double proteinPercentage = (totalProtein / nutrientTotal) * 100;
+        System.out.println(String.format("Fat: %.2f%%, Carb: %.2f%%, Protein: %.2f%%", fatPercentage, carbPercentage, proteinPercentage));
+
+        return String.format("Fat: %.2f%%, Carb: %.2f%%, Protein: %.2f%%", fatPercentage, carbPercentage, proteinPercentage);
+    }
+
+
 
 }

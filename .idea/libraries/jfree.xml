@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="jfree">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Desktop/UMLS/jcommon-1.0.23.jar!/" />
+      <root url="jar://$USER_HOME$/Desktop/UMLS/jfreechart-1.0.19.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$USER_HOME$/Desktop/UMLS/jfreechart-1.5.2/src/main/java" />
+      <root url="file://$USER_HOME$/Desktop/UMLS/jfreechart-1.5.2/src/test/java" />
+    </SOURCES>
+  </library>
+</component>

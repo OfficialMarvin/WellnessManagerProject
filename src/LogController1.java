@@ -4,6 +4,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import org.jfree.chart.ChartPanel;
 
 public class LogController1{
     private BasicFood basicFoodModel;
@@ -32,6 +33,12 @@ public class LogController1{
         System.out.println(logView);
         System.out.println(this.logController);
 
+        ChartPanel chartPanel = logForm.logView1().makeBar();
+        logForm.logView1().showGUI(chartPanel);
+
+
+
+
 
 
         logForm.logView1().getComboBox1().addActionListener(e -> {
@@ -51,7 +58,7 @@ public class LogController1{
             } else if (selectedOption.equals("Daily Weight")) {
                 logForm.logView1().setDisplay("Weight on day: "+ String.valueOf(DailyLog.getDayWeight()));
             } else if (selectedOption.equals("Daily Nutrition Breakdown")) {
-
+                logForm.logView1().setDisplay("Nutrient breakdown on day: "+ String.valueOf(DailyLog.getDayNut()));
             } else if (selectedOption.equals("Display Nothing")) {
                 logForm.logView1().setDisplay("");
             }
@@ -63,6 +70,8 @@ public class LogController1{
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         LocalDate date = LocalDate.parse(dateString, formatter);
         DailyLog.setCurrentDate(date);
+        ChartPanel chartPanel2 = logForm.logView1().makeBar();
+        logForm.logView1().showGUI(chartPanel2);
                 });
 
 
