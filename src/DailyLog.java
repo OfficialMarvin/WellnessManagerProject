@@ -12,6 +12,14 @@ public class DailyLog {
     private static final Map<LocalDate, Map<String, Double>> foodEntries = new HashMap<>();
     private static final Map<LocalDate, List<String>> exerciseEntries = new HashMap<>();
     private static LocalDate currentDate = LocalDate.now();
+    private static DailyLog instance = null;
+
+    public static DailyLog getInstance() {
+        if (instance == null) {
+            instance = new DailyLog();
+        }
+        return instance;
+    }
 
     public static void setCurrentDate(LocalDate date) {
         DailyLog.currentDate = date;

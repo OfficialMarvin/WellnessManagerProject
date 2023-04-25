@@ -17,6 +17,16 @@ public class FoodCollection {
         return foods.get(name);
     }
 
+    private static FoodCollection instance = null;
+
+    public static FoodCollection getInstance() {
+        if (instance == null) {
+            instance = new FoodCollection();
+        }
+        return instance;
+    }
+
+
     public static void loadFoods(){
         Path filePath = Paths.get("foods.csv");
 
