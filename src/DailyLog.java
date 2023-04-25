@@ -1,5 +1,9 @@
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.*;
 
 public class DailyLog {
@@ -31,6 +35,52 @@ public class DailyLog {
         }
     }
 
+    public static String getDayExer() {
+        StringBuilder dayExercises = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader("log.csv"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 6) {
+                    LocalDate date = LocalDate.of(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
+                    if (date.equals(currentDate) && parts[3].equals("e")) {
+                        String exerciseName = parts[4];
+                        double minutes = Double.parseDouble(parts[5]);
+                        double caloriesBurned = Exercises.calculateCaloriesBurned(exerciseName, weight, minutes);
+                        dayExercises.append(String.format("%s: %.2f minutes burned %.0f calories%n", exerciseName, minutes, caloriesBurned));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading log.csv: " + e.getMessage());
+        }
+        return dayExercises.toString();
+    }
+
+    public static double getDayBurned() {
+        StringBuilder dayBurned = new StringBuilder();
+        double total = 0.0;
+        try (BufferedReader reader = new BufferedReader(new FileReader("log.csv"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 6) {
+                    LocalDate date = LocalDate.of(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
+                    if (date.equals(currentDate) && parts[3].equals("e")) {
+                        double minutes = Double.parseDouble(parts[5]);
+                        double caloriesBurned = Exercises.calculateCaloriesBurned(parts[4], weight, minutes);
+                        total += caloriesBurned;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading log.csv: " + e.getMessage());
+        }
+        dayBurned.append("Daily calories burned: " + total);
+        return total;
+    }
+
+
     public void addFoodEntry(String foodName, double count) {
         Map<String, Double> entry = foodEntries.getOrDefault(currentDate, new HashMap<>());
         entry.put(foodName, entry.getOrDefault(foodName, 0.0) + count);
@@ -47,29 +97,47 @@ public class DailyLog {
         }
     }
 
-    private static boolean checkIfLineExists(FileWriter writer, String line) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("log.csv"));
-        String csvLine;
-        while ((csvLine = reader.readLine()) != null) {
-            if (csvLine.equals(line)) {
-                return true;
+    public static boolean checkIfLineExists(String filePath, String lineToCheck) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                if (line.equals(lineToCheck)) {
+                    reader.close();
+                    return true;
+                }
             }
+
+            reader.close();
+        } catch (IOException e) {
+            LogView1.displayError("Error reading CSV file: " + e.getMessage());
         }
+
         return false;
     }
 
     public static void saveLog() {
         try {
-            FileWriter writer = new FileWriter("log.csv", true);
-            if(checkIfLineExists(writer, String.format("%04d,%02d,%02d,w,%.2f\n", currentDate.getYear(), currentDate.getMonthValue(), currentDate.getDayOfMonth(), weight)) == false){
-                writer.write(String.format("%04d,%02d,%02d,w,%.2f\n", currentDate.getYear(), currentDate.getMonthValue(), currentDate.getDayOfMonth(), weight));
+            String logFilePath = "log.csv";
+            String weightLine = String.format("%04d,%02d,%02d,w,%.2f\n", currentDate.getYear(), currentDate.getMonthValue(), currentDate.getDayOfMonth(), weight);
+            String calorieLine = String.format("%04d,%02d,%02d,c,%.2f\n", LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), calorieLimit);
+
+            if (!checkIfLineExists(logFilePath, weightLine) || !checkIfLineExists(logFilePath, calorieLine)) {
+                FileWriter writer = new FileWriter(logFilePath, true);
+
+                if (!checkIfLineExists(logFilePath, weightLine)) {
+                    writer.write(weightLine);
+                }
+
+                if (!checkIfLineExists(logFilePath, calorieLine)) {
+                    writer.write(calorieLine);
+                }
+
+                //Exercises.saveExercises();
+                FoodCollection.saveFoods();
+                writer.close();
             }
-            if(checkIfLineExists(writer,String.format("%04d,%02d,%02d,c,%.2f\n", LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), calorieLimit)) == false){
-                writer.write(String.format("%04d,%02d,%02d,c,%.2f\n", LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth(), calorieLimit));
-            }
-            //Exercises.saveExercises();
-            FoodCollection.saveFoods();
-            writer.close();
         } catch (IOException e) {
             LogView1.displayError("Error saving to CSV file: " + e.getMessage());
         }
@@ -143,4 +211,93 @@ public class DailyLog {
         }
         return totalCalories;
     }
+
+    public static void logFood(String name, double count) {
+        String entry = String.format("%d,%d,%d,f,%s,%.1f%n", currentDate.getYear(), currentDate.getMonthValue(), currentDate.getDayOfMonth(), name, count);
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get("log.csv"), StandardOpenOption.APPEND, StandardOpenOption.CREATE)) {
+            writer.write(entry);
+        } catch (IOException e) {
+            System.err.println("Error writing to log.csv: " + e.getMessage());
+        }
+    }
+
+    public static String getDayFood() {
+        StringBuilder dayFoods = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader("log.csv"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 6) {
+                    LocalDate date = LocalDate.of(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
+                    if (date.equals(currentDate) && parts[3].equals("f")) {
+                        String foodName = parts[4];
+                        double count = Double.parseDouble(parts[5]);
+                        double caloriesExpended = count * getCaloriesForFood(foodName); // Assuming you have a method to get calories for a given food
+                        dayFoods.append(String.format("%s: %.0f count gained %.0f calories%n", foodName, count, caloriesExpended));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading log.csv: " + e.getMessage());
+        }
+        return dayFoods.toString();
+    }
+
+    public static double getCaloriesForFood(String foodName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("foods.csv"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 6 && parts[1].equals(foodName)) {
+                    return Double.parseDouble(parts[2]);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading foods.csv: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    public static double getDayCals() {
+        StringBuilder dayCals = new StringBuilder();
+        double total = 0.0;
+        try (BufferedReader reader = new BufferedReader(new FileReader("log.csv"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 6) {
+                    LocalDate date = LocalDate.of(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
+                    if (date.equals(currentDate) && parts[3].equals("f")) {
+                        String foodName = parts[4];
+                        double count = Double.parseDouble(parts[5]);
+                        double calories = getCaloriesForFood(foodName) * count;
+                        total += calories;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading log.csv: " + e.getMessage());
+        }
+        dayCals.append(String.format("Total calories gained: %.0f", total));
+        return total;
+    }
+
+    public static double getDayWeight() {
+        try (BufferedReader br = new BufferedReader(new FileReader("log.csv"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 5 && parts[3].equals("w")) {
+                    LocalDate date = LocalDate.of(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
+                    if (date.equals(currentDate)) {
+                        return Double.parseDouble(parts[4]);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 0.0;
+    }
+
 }

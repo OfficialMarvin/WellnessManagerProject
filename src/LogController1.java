@@ -38,19 +38,22 @@ public class LogController1{
             String selectedOption = (String) logForm.logView1().getComboBox1().getSelectedItem();
 
             if (selectedOption.equals("Daily Food Items Consumed")) {
-                logForm.logView1().setDisplay(selectedOption);
+                logForm.logView1().setDisplay(DailyLog.getDayFood());
+
             } else if (selectedOption.equals("Daily Exercises Performed")) {
-
+                logForm.logView1().setDisplay(DailyLog.getDayExer());
             } else if (selectedOption.equals("Daily Consumed Calories")) {
-
+                logForm.logView1().setDisplay("Calories gained on day: "+ String.valueOf(DailyLog.getDayCals()));
             } else if (selectedOption.equals("Daily Expended Calories")) {
-
+                logForm.logView1().setDisplay("Calories burned on day: "+ String.valueOf(DailyLog.getDayBurned()));
             } else if (selectedOption.equals("Daily Net Calories")) {
-
+                logForm.logView1().setDisplay("Net calories on day: "+ String.valueOf(DailyLog.getDayCals()-DailyLog.getDayBurned()));
             } else if (selectedOption.equals("Daily Weight")) {
-
+                logForm.logView1().setDisplay("Weight on day: "+ String.valueOf(DailyLog.getDayWeight()));
             } else if (selectedOption.equals("Daily Nutrition Breakdown")) {
 
+            } else if (selectedOption.equals("Display Nothing")) {
+                logForm.logView1().setDisplay("");
             }
         });
 
@@ -85,6 +88,7 @@ public class LogController1{
             String burned = logForm.logView1().getBurnTxtField().getText();
             String ExerLog = logForm.logView1().getExerLogField().getText();
             String mins = logForm.logView1().getMinsField().getText();
+            String foodCount = logForm.logView1().getFoodCountField().getText();
 
             JTextArea areaForText = logForm.logView1().getTextArea1();
 
@@ -146,6 +150,11 @@ public class LogController1{
 
             if(!ExerLog.isEmpty() & !mins.isEmpty()){
                 DailyLog.addExerciseEntry(ExerLog, Double.parseDouble(mins));
+            }
+
+            if(!foodCount.isEmpty()){
+                String[] parts = foodCount.split(",");
+                DailyLog.logFood(parts[0],Double.parseDouble(parts[1]));
             }
             logForm.logView1().getNameTxtField().setText(" ");
                logForm.logView1().getCaloriesTxtfield().setText(" ");

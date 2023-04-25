@@ -80,6 +80,7 @@ public class LogController {
     }
 
     public void addExer(String name, float calories){
+        System.out.println("Log0 recieved");
         Exercises.addExercise(name,calories);
     }
 

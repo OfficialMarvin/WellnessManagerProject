@@ -36,6 +36,8 @@ public class LogView1 {
     private JButton dateButton;
     private JTextField dateField;
     private JComboBox comboBox1;
+    private JTextField foodCountField;
+    private JLabel foodCountTxT;
 
     public JComboBox getComboBox1(){
         return comboBox1;
@@ -110,6 +112,14 @@ public class LogView1 {
 
     public void setDateField(JTextField dateField) {
         this.dateField = dateField;
+    }
+
+    public JTextField getFoodCountField() {
+        return foodCountField;
+    }
+
+    public void setFoodCountField(JTextField foodCountField) {
+        this.foodCountField = foodCountField;
     }
 
     public JTextField getBurnTxtField() {

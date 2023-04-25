@@ -6,10 +6,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Exercises {
-    private static List<Exercise> exerciseList;
+    private List<Exercise> exerciseList;
     public Exercises() {
         exerciseList = new ArrayList<>();
     }
@@ -31,17 +33,6 @@ public class Exercises {
         }
     }
 
-    public static void saveExercises() {
-        Path path = Paths.get("exercise.csv");
-        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
-            for (Exercise exercise : exerciseList) {
-                writer.write("e," + exercise.getName() + "," + exercise.getCalories());
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            System.err.println("Error writing exercise.csv: " + e.getMessage());
-        }
-    }
     public static Exercise getExercise(String exerciseName) {
         List<Exercise> exercises = new ArrayList<>();
         // ... load exercises from a file ...
@@ -64,6 +55,33 @@ public class Exercises {
         } catch (IOException e) {
             System.err.println("Error writing exercise.csv: " + e.getMessage());
         }
+    }
+
+    public static double calculateCaloriesBurned(String exerciseName, double weight, double minutes) {
+        Map<String, Double> exerciseData = new HashMap<>();
+
+        try {
+            Path filePath = Paths.get("exercise.csv");
+            List<String> lines = Files.readAllLines(filePath);
+
+            for (String line : lines) {
+                String[] parts = line.split(",");
+                if (parts.length == 3) {
+                    exerciseData.put(parts[1], Double.parseDouble(parts[2]));
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading exercise.csv: " + e.getMessage());
+        }
+
+        Double caloriesPerHourPer100Pounds = exerciseData.get(exerciseName);
+        if (caloriesPerHourPer100Pounds == null) {
+            System.err.println("Exercise not found: " + exerciseName);
+            return 0.0;
+        }
+
+        double caloriesBurned = caloriesPerHourPer100Pounds * (weight / 100.0) * (minutes / 60.0);
+        return Math.round(caloriesBurned);
     }
 
 }
